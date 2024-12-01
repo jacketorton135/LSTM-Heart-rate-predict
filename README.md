@@ -148,6 +148,16 @@ LSTM 的理論基礎理論受到循環神經網路（RNN）的學習輸出的影
 
 ![image](https://github.com/user-attachments/assets/1edb5445-2fb0-479f-abc2-68ee06521c13)
 
+結合前端app
+![image](https://github.com/user-attachments/assets/b3251131-c4ed-4185-a2d8-ebb850e80cfb)
+
+![image](https://github.com/user-attachments/assets/95c9f151-0853-4457-9016-8e2923190d86)
+
+![image](https://github.com/user-attachments/assets/3880face-8a22-4ae4-95ba-38d584198ce1)
+
+
+
+
 
 
 
