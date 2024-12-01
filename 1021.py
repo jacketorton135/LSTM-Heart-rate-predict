@@ -258,12 +258,17 @@ def 訓練_LSTM模型(X, y):
     print(f"\n模型已儲存至 {模型儲存路徑}")
     
     print(f"\n平均準確率: {np.mean(平均準確率):.4f}, 平均AUC: {np.mean(平均AUC):.4f}")
-
+    
 # 主程序
 if __name__ == "__main__":
     文件路徑 = r"E:\心臟病\heart.csv"  # 資料集路徑
     X, y, 特徵列 = 載入與預處理數據(文件路徑)  # 載入與預處理資料
-    訓練_LSTM模型(X, y)  # 訓練模型  
+    
+    # 新增這兩行
+    print("原始資料類別分佈:")
+    print(pd.Series(y).value_counts())
+    
+    訓練_LSTM模型(X, y)  # 訓練模型
 
 
 
