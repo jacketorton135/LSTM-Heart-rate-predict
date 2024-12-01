@@ -87,7 +87,8 @@
 實際：無心臟病	真陰性 (TN) = 22	假陽性 (FP) = 6
 實際：有心臟病	假陰性 (FN) = 6	真陽性 (TP) = 27
 
-![image](https://github.com/user-attachments/assets/6ddb99ae-7d21-4365-8758-65c5a8c779c2)
+![image](https://github.com/user-attachments/assets/3669e34c-5ea3-421d-88e9-5ba6fc8e22d8)
+
 
 第一張圖（混淆矩陣）：
 
