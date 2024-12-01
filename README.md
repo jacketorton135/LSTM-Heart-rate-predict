@@ -33,7 +33,8 @@
 
 模型分類效果不錯，但假陽性和假陰性依然存在，需要進一步提升分類能力。
 
-![準確11](https://github.com/user-attachments/assets/85aaa7d3-8666-4e45-a516-47a208ae2129)
+![曲線_1](https://github.com/user-attachments/assets/579e0493-d96c-44f9-9827-aa31288c4e8e)
+
 
 模型的學習曲線
 圖表說明：
