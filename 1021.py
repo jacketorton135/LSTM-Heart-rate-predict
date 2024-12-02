@@ -201,6 +201,9 @@ def 訓練_LSTM模型(X, y):
     if not os.path.exists(os.path.dirname(scaler儲存路徑)):
         os.makedirs(os.path.dirname(scaler儲存路徑))
     
+    best_auc = 0  # Initialize best AUC as 0
+    best_model = None  # To store the best model
+
     for 折數, (訓練索引, 驗證索引) in enumerate(k折.split(X, y), 1):
         # 分割數據
         X_訓練, X_驗證 = X[訓練索引], X[驗證索引]
@@ -227,7 +230,7 @@ def 訓練_LSTM模型(X, y):
         history = 模型.fit(
             X_訓練, y_訓練,  # 訓練資料 (X_訓練: 特徵資料, y_訓練: 標籤資料)
             validation_data=(X_驗證, y_驗證),  # 驗證資料 (X_驗證: 驗證特徵資料, y_驗證: 驗證標籤資料)
-            epochs=50,  # 訓練的回合數 (500個訓練回合)
+            epochs=50,  # 訓練的回合數 (50個訓練回合)
             batch_size=32,  # 每個批次的樣本數量 (每次從資料中抽取32個樣本進行訓練)
             verbose=1  # 訓練過程中的顯示模式，1表示顯示進度條和訓練信息
         )
@@ -252,12 +255,20 @@ def 訓練_LSTM模型(X, y):
         
         # 混淆矩陣
         繪製混淆矩陣(y_驗證真值, y_預測, 折數)
+        
+        # 如果當前的模型AUC更好，則儲存這個模型
+        if auc值 > best_auc:
+            best_auc = auc值
+            best_model = 模型
+            best_model.save(模型儲存路徑)  # 儲存最佳模型
+            print(f"Best model saved at fold {折數} with AUC: {best_auc:.4f}")
     
-    # 儲存最終模型（這裡使用最後一個訓練的模型）
-    模型.save(模型儲存路徑)
-    print(f"\n模型已儲存至 {模型儲存路徑}")
+    # 若最佳模型存在，顯示最終結果
+    if best_model:
+        print(f"\n最佳模型已儲存至 {模型儲存路徑}")
     
     print(f"\n平均準確率: {np.mean(平均準確率):.4f}, 平均AUC: {np.mean(平均AUC):.4f}")
+
     
 # 主程序
 if __name__ == "__main__":
