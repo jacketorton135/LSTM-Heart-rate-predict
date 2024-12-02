@@ -243,50 +243,58 @@ def get_latest_data():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        print(request.form)  # 打印收到的表單數據
+        # 將輸入特徵轉換為數值
+        inputs = np.array([
+            float(request.form['age']),
+            int(request.form['sex']),
+            int(request.form['cp']),
+            float(request.form['trestbps']),
+            float(request.form['chol']),
+            int(request.form['fbs']),
+            int(request.form['restecg']),
+            float(request.form['thalach']),
+            int(request.form['exang']),
+            float(request.form['oldpeak']),
+            int(request.form['slope']),
+            int(request.form['ca']),
+            int(request.form['thal'])
+        ]).reshape(1, -1)
 
-        required_params = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 
-                           'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
+        # 使用標準化器縮放特徵
+        scaled_inputs = scaler.transform(inputs)
 
-        for param in required_params:
-            if param not in request.form:
-                return jsonify({'error': f'缺少必要的參數: {param}'}), 400
+        # 預測並獲取具體概率
+        prediction_proba = model.predict(scaled_inputs)[0][0]
 
-        # 類型轉換與驗證
-        try:
-            inputs = np.array([
-                float(request.form['age']),
-                int(request.form['sex']),
-                int(request.form['cp']),
-                float(request.form['trestbps']),
-                float(request.form['chol']),
-                int(request.form['fbs']),
-                int(request.form['restecg']),
-                float(request.form['thalach']),
-                int(request.form['exang']),
-                float(request.form['oldpeak']),
-                int(request.form['slope']),
-                int(request.form['ca']),
-                int(request.form['thal'])
-            ]).reshape(1, -1)  # Reshape to make it a 2D array (1 sample, 13 features)
-        except ValueError as ve:
-            return jsonify({'error': f'無效的輸入類型: {str(ve)}'}), 400
+        # 風險分層
+        def get_risk_level(proba):
+            if proba < 0.3:
+                return '低風險'
+            elif 0.3 <= proba < 0.6:
+                return '中等風險'
+            else:
+                return '高風險'
 
-        # 調用預測函數
-        prediction_result = model.predict(inputs)
+        # 風險建議
+        def get_risk_advice(risk_level):
+            advice_map = {
+                '低風險': '建議定期體檢，保持健康生活方式',
+                '中等風險': '建議進一步醫學評估，調整生活習慣',
+                '高風險': '強烈建議立即就醫，進行專業心臟檢查'
+            }
+            return advice_map[risk_level]
 
-        # 檢查預測結果的形狀並處理
-        if prediction_result.size == 1:
-            # 如果預測結果是單一值，則提取並處理
-            prediction_result = prediction_result.item()  # 提取純粹的數值
-        else:
-            # 如果預測結果是多個值，這裡可以根據需求進行處理（例如選擇最大值）
-            prediction_result = prediction_result.argmax()  # 假設這是一個分類問題
+        # 確定最終預測
+        final_prediction = 1 if prediction_proba > 0.3 else 0
+        risk_level = get_risk_level(prediction_proba)
+        risk_advice = get_risk_advice(risk_level)
 
         return jsonify({
-            'prediction': '檢測到心臟病，請諮詢醫生。' if prediction_result == 1 
-                         else '未檢測到心臟病，請保持健康。',
-            'risk_score': int(prediction_result)
+            'prediction': '檢測到心臟病，請諮詢醫生。' if final_prediction == 1 else '未檢測到心臟病，請保持健康。',
+            'risk_score': int(final_prediction),
+            'risk_probability': float(prediction_proba*100),
+            'risk_level': risk_level,
+            'risk_advice': risk_advice
         })
 
     except Exception as e:
