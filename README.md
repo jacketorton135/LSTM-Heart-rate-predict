@@ -1,5 +1,11 @@
 ﻿# LSTM-Heart-rate-predict
 
+ ![image](https://github.com/user-attachments/assets/d973e895-3fe4-41b1-bfed-9e4fbfefbfa9)
+
+ ![image](https://github.com/user-attachments/assets/5942dc48-3422-49bb-95e4-ed4d4872e72e)
+
+
+
  根據程式碼中的 k 折交叉驗證（StratifiedKFold）設定，詳細解釋驗證集的特點和交叉驗證的功用：
 交叉驗證設置：
 
